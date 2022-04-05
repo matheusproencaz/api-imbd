@@ -1,5 +1,7 @@
 package apiIMDB.main;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,15 +21,20 @@ public class ApiIMDB {
 		try {
 			HttpRequest request = HttpRequest
 					.newBuilder()
-					.uri(new URI("https://imdb-api.com/en/API/SearchMovie/"+apiKey+"/inception"))
+					.uri(new URI("https://imdb-api.com/pt-BR/API/Top250Movies/"+apiKey))
 					.header("Content-Type", "application/json")
 					.GET()
 					.build();
 			
 			HttpClient httpClient = HttpClient.newBuilder().build();
-			HttpResponse<String> respose = httpClient.send(request, BodyHandlers.ofString());
+			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
 			
-			System.out.println(respose.body());
+			String path = "E:\\Documentos\\Programação\\JAVA\\Spring Tools Suite 4\\ApiIMDB\\out.txt";
+
+			BufferedWriter bw = new BufferedWriter(new FileWriter(path,true));
+			
+			bw.append(response.body());
+			bw.close();
 			
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
@@ -38,3 +45,4 @@ public class ApiIMDB {
 		}
 	}	
 }
+

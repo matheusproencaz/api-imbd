@@ -1,48 +1,140 @@
 package apiIMDB.main;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import apiIMDB.main.view.HTMLGenerator;
+//import apiIMDB.main.model.Filme;
 import build.API_KEY;
 
 public class ApiIMDB {
 
 	public static void main(String[] args) {
-			
-		String apiKey = API_KEY.apiKey;
-		
-		try {
-			HttpRequest request = HttpRequest
-					.newBuilder()
-					.uri(new URI("https://imdb-api.com/pt-BR/API/Top250Movies/"+apiKey))
-					.header("Content-Type", "application/json")
-					.GET()
-					.build();
-			
-			HttpClient httpClient = HttpClient.newBuilder().build();
-			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
-			
-			String path = "E:\\Documentos\\Programação\\JAVA\\Spring Tools Suite 4\\ApiIMDB\\out.txt";
 
-			BufferedWriter bw = new BufferedWriter(new FileWriter(path,true));
+		String apiKey = API_KEY.apiKey;
+		List<Filme> dadosFilmes = new ArrayList<>();
+
+		String response = httpRequest("https://imdb-api.com/en/API/Top250Movies/", apiKey);
+		
+		List<String> ranks = listarDados(response, "rank");
+		List<String> titles = listarDados(response, "title");
+		List<String> year = listarDados(response, "year");
+		List<String> image = listarDados(response, "image");
+		List<String> imDbRating = listarDados(response, "imDbRating");
+
+		for (int i = 0; i < ranks.size(); i++) {
+			Filme filme = new Filme(Integer.parseInt(ranks.get(i)), titles.get(i), Integer.parseInt(year.get(i)),
+					image.get(i), Double.parseDouble(imDbRating.get(i)));
+			//System.out.println(filme.toString());
+			dadosFilmes.add(filme);
+		}
+		
+		HTMLGenerator html = new HTMLGenerator();
+		File file = printWriter(html.generateHTML(dadosFilmes));
+		openHTML(file);
+	}
+	
+	private static File printWriter(String data) {
+		try {
+			File file = new File("testHTML.html");
+			PrintWriter writer = new PrintWriter(file);
+			writer.write(data);
+			writer.close();
+			return file;
 			
-			bw.append(response.body());
-			bw.close();
-			
-		} catch (URISyntaxException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		}catch(FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}	
-}
+		return null;
+	}
 
+	private static void openHTML(File file) {
+		Desktop desktop = null;
+		desktop = Desktop.getDesktop();
+		URI url = null;
+		
+		try {
+			url = new URI(file.toURI().toString());
+			desktop.browse(url);
+			
+		}catch(URISyntaxException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static record Filme(Integer ranks, String titles, Integer years, String image, Double imDbRating) {
+
+		@Override
+		public String toString() {
+			if (ranks <= 9) {
+				return "[0" + ranks + "] | Título:" + titles + "| Ano de Lançamento:" + years + " | image=" + image
+						+ " | imDbRating=" + imDbRating + "]";
+			} else {
+				return "[" + ranks + "] | Título:" + titles + "| Ano de Lançamento:" + years + " | image=" + image
+						+ " | imDbRating=" + imDbRating + "]";
+			}
+		}
+	}
+
+	private static List<String> listarDados(String responseJson, String chave) {
+		List<String> list = new ArrayList<>();
+//		String newStr = "";
+//
+//		// Retira partes desnecessárias da String.
+//		Pattern pattern = Pattern.compile("\\[(.+?)\\]");
+//		Matcher matcher = pattern.matcher(responseJson);
+//
+//		// Joga em uma nova String.
+//		while (matcher.find()) {
+//			newStr = matcher.group(1);
+//		}
+
+// 		Pega os dados de uma chave específica ex: Chave Nome pega o valor Matheus Proença.
+
+//		Pattern pChave = Pattern.compile("\"" + chave + "\":\\s*[\"](.*?)[\"]\\s*[,}]");
+//		Matcher mChave = pChave.matcher(responseJson);
+
+		Matcher mChave = Pattern.compile("\"" + chave + "\":\\s*[\"](.*?)[\"]\\s*[,}]").matcher(responseJson);
+
+		while (mChave.find()) {
+			list.add(mChave.group(1));
+		}
+
+		return list;
+	}
+
+	private static String httpRequest(String URI, String apiKey) {
+		try {
+			HttpRequest request = HttpRequest.newBuilder().uri(new URI(URI + apiKey))
+					.header("Content-Type", "application/json").GET().build();
+
+			HttpClient httpClient = HttpClient.newBuilder().build();
+
+			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
+
+			return response.body();
+
+		} catch (URISyntaxException e) {
+			return "Erro" + e.getMessage();
+		} catch (IOException e) {
+			return "Erro" + e.getMessage();
+		} catch (InterruptedException e) {
+			return "Erro" + e.getMessage();
+		}
+	}
+}

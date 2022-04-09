@@ -13,7 +13,7 @@ Aqui, você vai começar a modelar o seu código de uma maneira melhor, pensando
 ## DIA 4 ✅
 Chegou a hora de brincar com HTML! No desafio de hoje, você vai trabalhar com a saída e gerar uma página HTML a partir da lista de objetos que você obteve anteriormente. A ideia será criar uma página HTML onde você possa ver as informações sobre o filme, incluindo o pôster e a nota.
 
-## DIA 5
+## DIA 5 ✅
 Nesse ponto, você terá feito muitos avanços na modelagem do código, mas provavelmente ainda terá códigos expostos. A sua tarefa será encapsular algumas das chamadas desenvolvidas até aqui em novas classes.
 
 ## DIA 6

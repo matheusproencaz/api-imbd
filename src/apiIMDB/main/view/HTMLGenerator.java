@@ -1,24 +1,24 @@
 package apiIMDB.main.view;
 
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 import apiIMDB.main.ApiIMDB.Filme;
 
 public class HTMLGenerator {
 
-	public String generateDIVs(List<Filme> filmes) {
-		StringBuilder sb = new StringBuilder();
-		for(int i = 0; i < filmes.size(); i++) {
-			sb.append(generateDIV(
-					filmes.get(i).titles(), 
-					filmes.get(i).years(), 
-					filmes.get(i).image(), 
-					filmes.get(i).imDbRating()));
-		}
-		return sb.toString();
+	private PrintWriter writer;
+	
+	public HTMLGenerator(PrintWriter writer){
+		this.writer = writer;
 	}
 	
-	public String generateHTML(List<Filme> filmes) {
+	public void generateHTML(List<Filme> filmes) {
 		String html = 
 				"""
 				<!DOCTYPE html>
@@ -39,10 +39,37 @@ public class HTMLGenerator {
 				</body>
 				</html>
 				""";
-		return html;
+		writer.append(html);
+		writer.close();
 	}
 	
-	public String generateDIV(String title, Integer years, String image, Double imDbRating) {
+	public void openHTMLFile(File file) {
+		Desktop desktop = null;
+		desktop = Desktop.getDesktop();
+		URI url = null;
+		
+		try {
+			url = new URI(file.toURI().toString());
+			desktop.browse(url);
+			
+		}catch(URISyntaxException | IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String generateDIVs(List<Filme> filmes) {
+		StringBuilder sb = new StringBuilder();
+		for(int i = 0; i < filmes.size(); i++) {
+			sb.append(generateDIV(
+					filmes.get(i).titles(), 
+					filmes.get(i).years(), 
+					filmes.get(i).image(), 
+					filmes.get(i).imDbRating()));
+		}
+		return sb.toString();
+	}
+	
+	private String generateDIV(String title, Integer years, String image, Double imDbRating) {
 		String divTemplate =
 				"""
 				<div class="col-sm-2">

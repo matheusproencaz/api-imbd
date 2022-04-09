@@ -10,7 +10,6 @@ import apiIMDB.main.ApiIMDB.Filme;
 public class ImdbMovieJsonParser {
 	
 	private String json;
-	//String json = new ImdbApiClient("https://imdb-api.com/en/API/Top250Movies/").httpRequest();
 	
 	public ImdbMovieJsonParser(String json) {
 		this.json = json;
@@ -23,7 +22,6 @@ public class ImdbMovieJsonParser {
 		while (mChave.find()) {
 			list.add(mChave.group(1));
 		}
-		
 		return list;
 	}
 	
@@ -42,5 +40,4 @@ public class ImdbMovieJsonParser {
 		}
 		return dadosFilmes;
 	}
-	
 }

@@ -1,4 +1,4 @@
-package apiIMDB.main.model;
+package apiIMDB.main.controller;
 
 import java.io.IOException;
 import java.net.URI;
@@ -8,27 +8,28 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 
-import build.API_KEY;
+import apiIMDB.main.interfaces.ApiClient;
 
-public class ImdbApiClient {
+public class MarvelApiClient implements ApiClient{
 	
-	private String apiKey = API_KEY.apiKey;
-	private String URI;
-	
-	public ImdbApiClient(String URI){
-		this.URI = URI;
+	private String apiPublicKey;
+	private String apiPrivateKey;
+	private String URI = "https://gateway.marvel.com:443/v1/public/series?ts=1&apikey=";
+
+	public MarvelApiClient(String apiPublicKey, String apiPrivateKey){
+		this.apiPublicKey = apiPublicKey;
+		this.apiPrivateKey = apiPrivateKey;
 	}
 	
-	public String httpRequest() {
+	public String getBody() {
 		try {
-			HttpRequest request = HttpRequest.newBuilder().uri(new URI(URI + apiKey))
+			HttpRequest request = HttpRequest.newBuilder().uri(new URI(URI + apiPublicKey + "&hash=" + apiPrivateKey))
 					.header("Content-Type", "application/json").GET().build();
 
 			HttpClient httpClient = HttpClient.newBuilder().build();
 
 			HttpResponse<String> response = httpClient.send(request, BodyHandlers.ofString());
 
-			System.out.println(response.body());
 			return response.body();
 
 		} catch (URISyntaxException e) {

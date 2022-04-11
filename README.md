@@ -16,9 +16,9 @@ Chegou a hora de brincar com HTML! No desafio de hoje, você vai trabalhar com a
 ## DIA 5 ✅
 Nesse ponto, você terá feito muitos avanços na modelagem do código, mas provavelmente ainda terá códigos expostos. A sua tarefa será encapsular algumas das chamadas desenvolvidas até aqui em novas classes.
 
-## DIA 6
+## DIA 6 ✅
 Aqui você verá um ponto importante e bem de alto nível. O seu desafio será deixar o seu código mais genérico, ou seja, preparado para receber dados de outras APIs. Para isso, você usará interfaces.
 
-## DIA 7
+## DIA 7 ✅
 No sétimo e último dia do desafio, você terá a possibilidade de ordenar a sua lista com base em diferentes atributos, utilizando a classe Collections e as interfaces Comparable e Comparator. Você irá fechar com chave de ouro!
 

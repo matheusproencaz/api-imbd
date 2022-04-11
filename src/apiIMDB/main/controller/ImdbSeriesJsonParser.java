@@ -7,13 +7,13 @@ import java.util.regex.Pattern;
 
 import apiIMDB.main.interfaces.Content;
 import apiIMDB.main.interfaces.JsonParser;
-import apiIMDB.main.model.Movie;
+import apiIMDB.main.model.Series;
 
-public class ImdbMovieJsonParser implements JsonParser{
+public class ImdbSeriesJsonParser implements JsonParser{
 	
 	private String json;
 	
-	public ImdbMovieJsonParser(String json) {
+	public ImdbSeriesJsonParser(String json) {
 		this.json = json;
 	}
 	
@@ -28,7 +28,7 @@ public class ImdbMovieJsonParser implements JsonParser{
 	}
 	
 	public List<? extends Content> parse() {
-		List<Movie> dadosFilmes = new ArrayList<>();
+		List<Series> dadosSeries = new ArrayList<>();
 		List<String> ranks = dataToList("rank");
 		List<String> titles = dataToList("title");
 		List<String> year = dataToList("year");
@@ -36,10 +36,10 @@ public class ImdbMovieJsonParser implements JsonParser{
 		List<String> imDbRating = dataToList("imDbRating");
 		
 		for (int i = 0; i < ranks.size(); i++) {
-			Movie movie = new Movie(Integer.parseInt(ranks.get(i)), titles.get(i), year.get(i),
+			Series serie = new Series(Integer.parseInt(ranks.get(i)), titles.get(i), year.get(i),
 					image.get(i), imDbRating.get(i));
-			dadosFilmes.add(movie);
+			dadosSeries.add(serie);
 		}
-		return dadosFilmes;
+		return dadosSeries;
 	}
 }

@@ -66,24 +66,27 @@ public class HTMLGenerator {
 					content.get(i).titles(), 
 					content.get(i).years(), 
 					content.get(i).urlImage(), 
-					content.get(i).rating()));
+					content.get(i).rating(),
+					content.get(i).type())
+					);
 		}
 		return sb.toString();
 	}
 	
-	private String generateDIV(String title, String years, String image, String rating) {
+	private String generateDIV(String title, String years, String image, String rating, String type) {
 		String divTemplate =
 				"""
 				<div class="col-sm-2">
 					<div class=\"card text-white bg-dark mb-3\" style=\"max-width: 18rem;\">
 						<h4 class=\"card-header\">%s</h4>
-						<div class=\"card-body\">
+						<div class=\"card-body \">
+							<p class=\"card-text\" style=\"color: grey; padding:0px; margin:0px; align-self:center;\">%s</p>
 							<img class=\"card-img\" src=\"%s\" alt=\"%s\">
 							<p class=\"card-text mt-2\">Nota: %s - Ano: %s</p>
 						</div>
 					</div>
 				</div>
 				""";
-		return String.format(divTemplate, title, image, title, rating, years);
+		return String.format(divTemplate, title, type ,image, title, rating, years);
 	}
 }

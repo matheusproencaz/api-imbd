@@ -2,7 +2,7 @@ package apiIMDB.main.model;
 
 import apiIMDB.main.interfaces.Content;
 
-public record Filme(Integer ranks, String titles, String years, String urlImage, String rating) implements Content{
+public record Movie(Integer ranks, String titles, String years, String urlImage, String rating) implements Content{
 	
 	@Override
 	public String toString() {
@@ -17,6 +17,11 @@ public record Filme(Integer ranks, String titles, String years, String urlImage,
 
 	@Override
 	public String type() {
-		return "Filme";
+		return "Movie";
+	}
+
+	@Override
+	public int compareTo(Content o) {
+		return this.rating().compareTo(o.rating());
 	}
 }

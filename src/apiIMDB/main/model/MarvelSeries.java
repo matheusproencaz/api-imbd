@@ -8,5 +8,9 @@ public record MarvelSeries(String titles, String years, String urlImage, String 
 	public String type() {
 		return "Series";
 	}
-	
+
+	@Override
+	public int compareTo(Content o) {
+		return this.rating().compareTo(o.rating());
+	}
 }

@@ -13,13 +13,22 @@ import apiIMDB.main.interfaces.ApiClient;
 public class ImdbApiClient implements ApiClient{
 	
 	private String apiKey;
-	private String URI = "https://imdb-api.com/en/API/Top250Movies/";
+	private String URI;
 	
-	public ImdbApiClient(String apiKey){
+	public ImdbApiClient(String apiKey, String type){
 		this.apiKey = apiKey;
+		
+		if(type.equals("series")) {
+			URI = "https://imdb-api.com/en/API/Top250TVs/";
+		} else if(type.equals("movies")) {
+			URI = "https://imdb-api.com/en/API/Top250Movies/";
+		} else {
+			throw new IllegalArgumentException("Digite um tipo válido!");
+		}
 	}
 	
 	public String getBody() {
+		
 		try {
 			HttpRequest request = HttpRequest.newBuilder().uri(new URI(URI + apiKey))
 					.header("Content-Type", "application/json").GET().build();
